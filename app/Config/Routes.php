@@ -1,48 +1,49 @@
 <?php
 
-use CodeIgniter\Router\RouteCollection;
+namespace Config;
 
-/**
- * @var RouteCollection $routes
- */
+$routes = Services::routes();
 
 $routes->setDefaultNamespace('App\Controllers');
-$routes->setDefaultController('MedisController');
-$routes->setDefaultMethod('login');
+$routes->setDefaultController('Home');
+$routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
 
-// Auth
-$routes->get('/',                        'MedisController::login');
-$routes->get('login',                    'MedisController::login');
-$routes->post('login',                   'MedisController::doLogin');
-$routes->get('logout',                   'MedisController::logout');
+$routes->setAutoRoute(false);
+$routes->setDefaultNamespace('App\Controllers'); 
 
-// Dashboard
-$routes->get('dashboard','MedisController::dashboard');
+$routes->get('/', 'Home::index');
 
-// Rekam Medis CRUD
-$routes->get('rekam-medis','MedisController::rekamMedis');
-$routes->get('rekam-medis/create','MedisController::rekamMedisCreate');
-$routes->post('rekam-medis/store','MedisController::rekamMedisStore');
-$routes->get('rekam-medis/edit/(:num)',  'MedisController::rekamMedisEdit/$1');
-$routes->post('rekam-medis/update/(:num)','MedisController::rekamMedisUpdate/$1');
-$routes->get('rekam-medis/delete/(:num)','MedisController::rekamMedisDelete/$1');
+$routes->get('traceability/login',       'TraceabilityController::login');
+$routes->post('traceability/login',      'TraceabilityController::loginPost');
+$routes->get('traceability/logout',      'TraceabilityController::logout');
 
+$routes->get('traceability/supplier',              'TraceabilityController::supplier');
+$routes->post('traceability/supplier/store',       'TraceabilityController::supplierStore');
+$routes->post('traceability/supplier/delete/(:num)', 'TraceabilityController::supplierDelete/$1');
+$routes->delete('traceability/supplier/delete/(:num)', 'TraceabilityController::supplierDelete/$1');
+$routes->get('traceability/supplier/edit/(:num)',  'TraceabilityController::supplierEdit/$1');
+$routes->post('traceability/supplier/update/(:num)', 'TraceabilityController::supplierUpdate/$1');
 
-// Alias pasien → rekam medis
-$routes->get('pasien', 'MedisController::rekamMedis');
-$routes->get('pasien/create', 'MedisController::rekamMedisCreate');
-$routes->post('pasien/store', 'MedisController::rekamMedisStore');
-$routes->get('pasien/edit/(:num)', 'MedisController::rekamMedisEdit/$1');
-$routes->post('pasien/update/(:num)', 'MedisController::rekamMedisUpdate/$1');
-$routes->get('pasien/delete/(:num)', 'MedisController::rekamMedisDelete/$1');
-$routes->get('pasien/detail/(:num)', 'MedisController::detail/$1');
+$routes->get('traceability/manufacturer',                'TraceabilityController::manufacturer');
+$routes->post('traceability/manufacturer/store',         'TraceabilityController::manufacturerStore');
+$routes->post('traceability/manufacturer/delete/(:num)', 'TraceabilityController::manufacturerDelete/$1');
+$routes->delete('traceability/manufacturer/delete/(:num)', 'TraceabilityController::manufacturerDelete/$1');
+$routes->get('traceability/manufacturer/edit/(:num)',    'TraceabilityController::manufacturerEdit/$1');
+$routes->post('traceability/manufacturer/update/(:num)', 'TraceabilityController::manufacturerUpdate/$1');
 
-$routes->get('kunjungan', 'MedisController::kunjungan');
-$routes->get('kunjungan/create', 'MedisController::rekamMedisCreate');
-$routes->post('kunjungan/store', 'MedisController::rekamMedisStore');
-$routes->get('kunjungan/detail/(:num)', 'MedisController::detail/$1');
+$routes->get('traceability/distributor',                'TraceabilityController::distributor');
+$routes->post('traceability/distributor/store',         'TraceabilityController::distributorStore');
+$routes->post('traceability/distributor/delete/(:num)', 'TraceabilityController::distributorDelete/$1');
+$routes->get('traceability/distributor/qr/(:any)',      'TraceabilityController::generateQR/$1');
+$routes->delete('traceability/distributor/delete/(:num)', 'TraceabilityController::distributorDelete/$1');
+$routes->get('traceability/distributor/edit/(:num)',    'TraceabilityController::distributorEdit/$1');
+$routes->post('traceability/distributor/update/(:num)', 'TraceabilityController::distributorUpdate/$1');
 
-// Verify Data
-$routes->get('verify','MedisController::verify');
+$routes->get('traceability/track/(:any)',  'TraceabilityController::track/$1');
+$routes->get('traceability/track-search', 'TraceabilityController::trackByResi');
+
+if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
+    require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
+}
